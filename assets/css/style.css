@@ -145,6 +145,11 @@ button:hover{
     margin-bottom: 5px;
 }
 
+.expenses-container #all-expenses{
+    display: flex;
+    flex-direction: column;
+}
+
 .expenses-container > div time{
     font-weight: normal;
     font-size: 12px;

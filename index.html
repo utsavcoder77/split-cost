@@ -13,8 +13,8 @@
         <div class="unsettled-container">
             <h6>Unsettled Amount per user</h6>
             <div>
-                <div>$60.00</div>
-                <button class="primary-button">SETTLE NOW</button>
+                <div>$<span id="unsettled-amount">00.00</span></div>
+                <button class="primary-button" id="settle-now-btn">SETTLE NOW</button>
             </div>
         </div>
 
@@ -38,6 +38,7 @@
                 </div>
                 <button>ADD NEW</button>
             </div>
+            <div id="error-msg"></div>
         </form>
 
         <div class="expenses-container">

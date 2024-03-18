@@ -48,7 +48,8 @@
     function getExpenses() {
         const expenses1 = new ExpensesItem("Woolworths Shopping", 120);
         const expenses2 = new ExpensesItem("Aldi", 160.00);
-        const allExpenses = [expenses1, expenses2];
+        expenses2.settled = true;
+        const allExpenses = [expenses1, expenses2, expenses1, expenses2];
         return allExpenses;
     }   
 
@@ -63,20 +64,47 @@
         userContainer.innerHTML = userElements.join("");
     }
 
-    function populateUsersExpenses(expenses) {
-        
+    function populateExpenses(expenses) {
+        const expensesContainer = document.querySelector("#all-expenses");
+        const expenseElements = expenses.map((expense) => {
+            return `
+            <div ${expense.settled ? "class=settled-row" : ""}>
+                <div>
+                    <span>${expense.description}</span>
+                    <time>${expense.date}</time>
+                </div>
+                <div  class="amount">
+                    $${expense.amount}
+                </div>
+            </div>
+            `
+        });
+        expensesContainer.innerHTML = expenseElements.join("");
     }
+
+    function addNewExpense(event) {
+        event.preventDefault();
+        const description = document.querySelector("textarea").value;
+        const amount = document.querySelector("input").value;
+        const newExpense = new ExpensesItem(description, parseFloat(amount));
+        splitCostObject.addNewExpenses(newExpense);
+        populateExpenses(splitCostObject.expenses);
+    }
+
+    function addNewEventListener() {
+        const newButtonElement = document.querySelector(".new-container button");
+        newButtonElement.addEventListener("click", addNewExpense);
+    }
+
+
+    addNewEventListener();
 
     const splitCostObject = new SplitCost();
     populateUsers(splitCostObject.users);
+    populateExpenses(splitCostObject.expenses);
+
     
+
     
     
 })();
-
-
-
-
-
-
-

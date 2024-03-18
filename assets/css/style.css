@@ -130,6 +130,7 @@ button:hover{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: white;
 }
 
 .expenses-container h3{
@@ -156,8 +157,12 @@ button:hover{
 
 }
 
-.settled-row{
+.expenses-container > div .settled-row{
     background-color: #F2EEEE;
+}
+
+.settled-row::before {
+    content: "✅ ";
 }
 
 .expenses-container > div.expenses-footer {
@@ -179,3 +184,7 @@ label span{
     color: red;
 }
 
+
+#error-msg {
+    color: red;
+}

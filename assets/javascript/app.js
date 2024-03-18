@@ -25,11 +25,20 @@
         }
 
         this.settleNow = function() {
-                // 
+                this.expenses.forEach(expense => {
+                    expense.isSettled = true;
+                })
         }
 
         this.calculateUnsettledAmount = function() {
-            // 
+            const userCount = this.users.length;
+            let totalExpenses = 0;
+            this.expenses.forEach(expense => {
+                if(!expense.isSettled){
+                    totalExpenses += expense.amount;
+                }
+            });
+            this.unsettledAmount = totalExpenses / userCount
         }
     }
 
@@ -63,12 +72,17 @@
         });
         userContainer.innerHTML = userElements.join("");
     }
+    function populateUnsettledAmount() {
+        splitCostObject.calculateUnsettledAmount();
+        const unsettledAmount =  splitCostObject.unsettledAmount;
+        document.getElementById("unsettled-amount").textContent = unsettledAmount;
+    }
 
     function populateExpenses(expenses) {
         const expensesContainer = document.querySelector("#all-expenses");
         const expenseElements = expenses.map((expense) => {
             return `
-            <div ${expense.settled ? "class=settled-row" : ""}>
+            <div ${expense.isSettled ? "class=settled-row" : ""}>
                 <div>
                     <span>${expense.description}</span>
                     <time>${expense.date}</time>
@@ -84,20 +98,45 @@
 
     function addNewExpense(event) {
         event.preventDefault();
-        const description = document.querySelector("textarea").value;
-        const amount = document.querySelector("input").value;
+        const descriptionElement = document.querySelector("textarea");
+        const amountElement = document.querySelector("input");
+        const errorElement = document.querySelector("#error-msg");
+        const description = descriptionElement.value;
+        const amount = amountElement.value;
+        if(!description || !amount) {
+            errorElement.textContent = "Description and amount are required";
+            return
+        };
+        
         const newExpense = new ExpensesItem(description, parseFloat(amount));
         splitCostObject.addNewExpenses(newExpense);
+        populateUnsettledAmount();
         populateExpenses(splitCostObject.expenses);
+        descriptionElement.value = "";
+        amountElement.value = "";
+        errorElement.textContent = "";
+    }
+
+    function settleExpenses() {
+        splitCostObject.settleNow();
+        populateExpenses(splitCostObject.expenses);
+        populateUnsettledAmount();
     }
 
     function addNewEventListener() {
         const newButtonElement = document.querySelector(".new-container button");
         newButtonElement.addEventListener("click", addNewExpense);
+        
+    }
+
+    function addSettleNowEventListner(){
+        const settleNow = document.querySelector("#settle-now-btn");
+        settleNow.addEventListener("click", settleExpenses);
     }
 
 
     addNewEventListener();
+    addSettleNowEventListner();
 
     const splitCostObject = new SplitCost();
     populateUsers(splitCostObject.users);
